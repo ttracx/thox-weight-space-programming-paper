@@ -39,9 +39,31 @@ Cover visually inspected (Public edition pill, v1.0.1, DOI line).
 | dist/Weight-Space-Programming-for-THOX-Edge-Models_v1.0.1.docx | 0010c5fe69ed90eb7c096c92e3f7c11bc7f83fe5da91b4fda3bc75d03196089e |
 | dist/weight-space-programming-demo.html | 399d4706eeaa67829d0afd7d3d0b68a153e6222428f937f704237070094b4d21 |
 
-Zenodo: DOI 10.5281/zenodo.23954379 reserved on the draft deposit
-2026-11-04; files above uploaded to that deposit and published (record
-URL and verification appended below when the publish step confirms).
+Zenodo: DOI 10.5281/zenodo.23954379 (concept DOI
+10.5281/zenodo.23954378). PUBLISHED and verified anonymously
+2026-11-04: record https://zenodo.org/records/23954379 carries the
+PDF, HTML, demo and artifact ZIP, license CC BY 4.0, creators Ross
+(ORCID 0009-0005-9872-3673) then Xaypanya (ORCID
+0009-0000-4425-9565), version field 1.0.1 (set via the API edit cycle
+after the browser publish).
+
+Association pass (2026-11-04, one pass):
+- GitHub: ttracx/thox-weight-space-programming-paper, public, release
+  v1.0.1 with the paper trio; collaborator invites pending for
+  sadiethox and cross80127 (push, the personal-repo maximum).
+- Website: thox.ai PR #490 merged 2026-11-04; page live at
+  /research/papers/weight-space-programming; hosted PDF and demo
+  hash-match this edition (dfea8a7e... and 399d4706...); papers index
+  carries the entry (7 papers).
+- Hugging Face: Thox-ai/thox-whitepapers folder
+  weight-space-programming/ (PDF + HTML) and a dataset-card entry
+  with the DOI; status appended when the upload verifies.
+- Pipeline: registered in ~/workspace/research-publishing-pipeline
+  (registry.json + manifests/weight-space-programming.json).
+- Data supplement S1 (scoped loop baseline, GPU run): pub/
+  LOOP-BASELINE-SUPPLEMENT.md and repo docs/.
+- Announcements: pub/ANNOUNCEMENTS.md (LinkedIn + X drafts). NOT
+  posted; posting is the founders' call.
 
 ## What was done (per Tommy's order, 2026-11-03 11:32 CT, and Claude's
 review + narrow-adoption plan, 12:08 CT)
@@ -99,3 +121,43 @@ review + narrow-adoption plan, 12:08 CT)
   and Craig has the paper PDF and DOCX as attachments.
 - Bundle location: ~/workspace/weight-space-programming-20261103/ and
   the artifact ZIP beside it.
+
+## v1.1.0 public edition (2026-11-04)
+
+Built by the Claude lane as an internal edition (THOX.ai Research
+byline only, AI-assistance note in document control, Section 5 full
+protocol unmeasured after HF Jobs returned 402). Tommy ruled
+2026-11-04 09:47 CT: restore the Craig Ross + Tommy Xaypanya byline,
+drop the AI note, publish as the public edition. Sadie rebuilt from
+the lane's build sources on KnightHub (wp/build.py, pdf.cjs,
+merge_pdf.py, demo_build.py): founder byline + roles restored,
+AI-assistance row removed, public-edition pill and running footers,
+Zenodo DOI baked into the cover foot and document control, change log
+records the byline restoration. QA: 21 pages, cover inspected,
+text-layer checks pass (no AI-assistance text; "internal edition"
+survives only in the v1.0.0 reference entry).
+
+SHA-256: PDF 5a44eeb60ef5836553c725bfdfacc1a60ef9e26708060f1e2c857a8d1ce94f4a;
+HTML 059748917e83da2aba1435d1f2a79d340672ecf7f3984b5243e56eda722aaf50;
+demo 88a08f0ae68737e77add61af59133f3fc0c673b882311420d004e87814857cb0;
+artifact ZIP 3fe597562f7a69b6bbfac996d780e75e27a52c17fedb6bc6c08371b4378b45b3.
+
+Zenodo: new version of record 23954379, DOI 10.5281/zenodo.23955394
+(concept 10.5281/zenodo.23954378), published and hash-verified live.
+GitHub: release v1.1.0 on ttracx/thox-weight-space-programming-paper
+(trio + artifact ZIP); README updated. Website: PR #493 merged;
+hosted v1.1.0 PDF/demo hash-match canonical; stat card corrected to
+the 80.6 KB exact patch. Content deltas over v1.0.1: E0-R second-host
+re-verification, P1 exact-patch correction (factor form exact on
+118,160 of 130,188 entries; +12,028-entry residual = 80.6 KB vs the
+released 387.6 KB sparse file), A0 paired analysis (edit higher on
+306 MATH-500 problems, lower on none; AMC23 0.5% to 23.4%), Section 5
+full protocol pre-registered (run stopped by HF billing 402; no
+number stated; scoped S1 supplement stands), 47 references
+re-verified (9 corrected), demo runs the real loop detector (6/6).
+
+Founder comms: the Claude lane sent its own v1.1.0 report email
+2026-11-04 09:42 CT from Sadie@thox.ai (no attachments). Sadie's
+consolidated publication closeout follows separately and carries the
+consent request for the exact v1.1.0 bytes above. Craig's consent:
+outstanding at publication (Tommy's CTO order), as with v1.0.1.
