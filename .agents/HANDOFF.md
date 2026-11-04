@@ -161,3 +161,50 @@ Founder comms: the Claude lane sent its own v1.1.0 report email
 consolidated publication closeout follows separately and carries the
 consent request for the exact v1.1.0 bytes above. Craig's consent:
 outstanding at publication (Tommy's CTO order), as with v1.0.1.
+
+## Reconciliation, Claude lane (2026-11-04, after the v1.1.0 publication)
+
+Two different byte sets were labeled v1.1.0 for about 20 minutes. Record
+of each, kept separate:
+
+- **Record (canonical).** Sadie's rebuild per Tommy's 09:47 CT ruling:
+  founder byline, no AI-assistance row, Zenodo DOI 10.5281/zenodo.23955394.
+  PDF 5a44eeb6...; HTML 05974891... This is v1.1.0.
+- **Claude-lane candidate (not published, superseded).** Built 09:56 CT in
+  the Claude workspace before the ruling reached that lane: THOX.ai
+  Research byline, AI-assistance row kept, plus the deltas below. PDF
+  e012202e5f35...; HTML 7a57de0c41c9...; demo 21956efa43ea.... Its
+  website branch was never merged; it is not a THOX edition and must not
+  be cited as v1.1.0.
+
+Deltas from the candidate that are queued for v1.1.1 (none changes a
+v1.1.0 conclusion):
+1. E1 to E3 re-run on a second host (Claude cloud workspace, CPU,
+   Python 3.12, NumPy 2.5.3) from `artifact/exp/wsp_experiments.py`
+   with the weight cache removed: 50 of 54 recorded values identical;
+   the oracle-trained MAE differs at 4.6e-7 relative (two copies), the
+   triangle-wave reachable-range error is 2.2e-16 vs 4.4e-16 (machine
+   epsilon), and wall time differs. Evidence:
+   `artifact/exp/results/rerun_e123_second_host.json` and
+   `summary_e123_rerun_second_host.json`. E4 (PyTorch) not re-run.
+2. Patch-channel tests re-run on the same host: Rust `cargo test` 3/3,
+   `tests/test_patch_channel_e2e.py` ALL PASS.
+3. Section 5 note on the v1.0.1 S1 supplement (320-token cap, every arm
+   capped, loop detector never fired: the instrument distinguished
+   nothing at that budget).
+4. Carried-number cross-check against `artifact/exp/results/summary.json`
+   (14 values match).
+
+Website: thox.ai commit b50a3db (main, 2026-11-04) aligned the v1.1.0
+page with the record. The page had shown the v1.0.1 abstract, v1.0.1
+stat cards and Section 5 title, the v1.0.1 DOI under "DOI record", and a
+Hugging Face link: Thox-ai/thox-whitepapers holds no Weight-Space
+Programming file (checked 2026-11-04). The HF upload remains open.
+
+v1.1.1 should be built from the v1.1.0 record's sources (the artifact
+ZIP on Zenodo, 3fe59756...) with deltas 1 to 4 ported, plus the L1
+measurement once Hugging Face billing is restored.
+
+Open for Tommy: the THOX research-paper standard and arXiv policy both
+expect an AI-assistance disclosure; v1.1.0 dropped it on the 09:47
+ruling. Any arXiv submission needs that settled first.

@@ -1,0 +1,31 @@
+{
+ "what": "E1 to E3 re-run from the v1.0.0 script on a second host, weight cache removed so E1 retrains",
+ "script": "artifact/exp/wsp_experiments.py in ttracx/thox-weight-space-programming-paper @ b164789",
+ "script_sha256": "2f5e7684b5a1f0fda4d5fa7726a3c7f567c82a3c5e24a623368d1dd315bfee75",
+ "host": "Claude cloud workspace, Linux, CPU, python 3.13.18, numpy 2.5.3",
+ "date": "2026-11-04",
+ "values_compared": 54,
+ "identical": 50,
+ "differing": {
+  "experiments.E2_write.trained_oracle_target_mae": {
+   "v1_0_0": 0.0008688390675197861,
+   "rerun": 0.0008688394673616269
+  },
+  "experiments.E2_write.trained_oracle_target_mae_hard": {
+   "v1_0_0": 0.0008688390675197861,
+   "rerun": 0.0008688394673616269
+  },
+  "experiments.E2_write.triangle_wave_max_error_reachable_range": {
+   "v1_0_0": 2.220446049250313e-16,
+   "rerun": 4.440892098500626e-16
+  },
+  "wall_seconds": {
+   "v1_0_0": 128.2,
+   "rerun": 51.6
+  }
+ },
+ "max_relative_difference_excluding_wall_time_and_epsilon_terms": 4.6020241916196127e-07,
+ "reading": "Every recorded result is identical except two copies of one oracle-trained MAE (relative difference 4.6e-07) and a reachable-range triangle-wave error at machine epsilon (2.2e-16 vs 4.4e-16); wall time differs by host.",
+ "rerun_summary_file": "artifact/exp/results/summary_e123_rerun_second_host.json",
+ "reference_file": "artifact/exp/results/summary_e123.json"
+}
