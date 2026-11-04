@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Weight-Space Programming Demo</title>
+<meta name="description" content="Companion to THOX technical report v1.1.0: read a task from composed weight maps, explore a 16-weight policy fix, check the released Qwen3.5-0.8B edit, size an exact signed patch, and run the loop detector and the pre-registered decision rule in the browser.">
+<style>
+:root{--bg:#FFFFFF;--fg:#09090B;--muted:#52525B;--rule:#D4D4D8;--card:#F4F4F5;--green:#047C3D;--pale:#E8F5EE;
+--bad:#B91C1C;--amber:#B45309;--mark:#FDE68A;--mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+--sans:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#09090B;--fg:#FAFAFA;--muted:#A1A1AA;
+--rule:#3F3F46;--card:#18181B;--green:#05A451;--pale:#0F2A1B;--bad:#F87171;--amber:#F59E0B;--mark:#5B4A12}}
+:root[data-theme="dark"]{--bg:#09090B;--fg:#FAFAFA;--muted:#A1A1AA;--rule:#3F3F46;--card:#18181B;--green:#05A451;
+--pale:#0F2A1B;--bad:#F87171;--amber:#F59E0B;--mark:#5B4A12}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);line-height:1.5;font-size:15px}
+.wrap{max-width:960px;margin:0 auto;padding:22px 16px 48px}
+header{border-bottom:2px solid var(--green);padding-bottom:10px;margin-bottom:16px;position:relative}
+.eyebrow{font-family:var(--mono);font-size:11px;color:var(--green);text-transform:uppercase;letter-spacing:.08em;
+padding-right:80px}
+h1{font-size:24px;margin:6px 0 4px;line-height:1.2}
+h2{font-size:18px;margin:28px 0 8px;border-bottom:1px solid var(--rule);padding-bottom:4px}
+p{margin:0 0 10px}
+.card{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:14px;margin:10px 0}
+label{display:block;font-size:13px;color:var(--muted);margin:8px 0 2px}
+input,select,textarea{width:100%;max-width:100%;font-family:var(--mono);font-size:13px;padding:7px 8px;
+border:1px solid var(--rule);border-radius:6px;background:var(--bg);color:var(--fg)}
+textarea{min-height:110px;resize:vertical}
+input[type=range]{padding:0}
+button{font-family:var(--sans);font-size:14px;font-weight:600;background:var(--green);color:#fff;border:0;
+border-radius:6px;padding:8px 14px;margin:10px 6px 0 0;cursor:pointer;transition:opacity 120ms}
+button:hover{opacity:.9}
+button.secondary{background:transparent;color:var(--green);border:1px solid var(--green)}
+@media (prefers-reduced-motion:reduce){button{transition:none}}
+.out{font-family:var(--mono);font-size:12.5px;white-space:pre-wrap;word-break:break-word;background:var(--bg);
+border:1px solid var(--rule);border-radius:6px;padding:10px;margin:8px 0 0;max-height:320px;overflow:auto}
+.ok{color:var(--green);font-weight:600}.bad{color:var(--bad);font-weight:600}.warn{color:var(--amber);font-weight:600}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:10px 0}
+.kpi{border:1px solid var(--rule);border-top:3px solid var(--green);border-radius:6px;padding:10px;background:var(--card)}
+.kv{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--green);word-break:break-word}
+.kl{font-size:12px;color:var(--muted);margin-top:3px}
+.kt{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-top:6px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:8px 0}
+th,td{text-align:left;padding:5px 6px;border-bottom:1px solid var(--rule)}
+th{color:var(--muted);font-weight:600}
+td.num{font-family:var(--mono);text-align:right}
+.note{font-size:13px;color:var(--muted)}
+.maps{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:8px}
+canvas.map{border:1px solid var(--rule);border-radius:6px;image-rendering:pixelated;width:100%;max-width:150px;
+aspect-ratio:1/1}
+mark{background:var(--mark);color:inherit}
+.theme{position:absolute;top:0;right:0;font-size:12px;background:transparent;color:var(--muted);
+border:1px solid var(--rule);padding:4px 10px;margin:0}
+.badge{display:inline-block;font-family:var(--mono);font-size:11px;border:1px solid var(--green);color:var(--green);
+border-radius:999px;padding:1px 8px;margin-left:6px}
+.badge.bad{border-color:var(--bad);color:var(--bad)}
+footer{margin-top:32px;font-size:12px;color:var(--muted);border-top:1px solid var(--rule);padding-top:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <button class="theme" id="themeBtn" type="button">Dark</button>
+  <div class="eyebrow">THOX.ai Research &middot; companion demo to technical report v1.1.0</div>
+  <h1>Weight-Space Programming, hands on</h1>
+  <p>Six instruments from the report, running in this page. Each number carries its evidence class. The loop detector
+  is a line-for-line port of the report's Python metric and checks itself against Python-computed vectors when the
+  page loads: <span id="selftest" class="badge">checking</span></p>
+</header>
+
+<h2>1. Read: find the task in the composed maps</h2>
+<p>Per-class effective input-to-logit maps (E = W2<sup>T</sup>W1<sup>T</sup>) of trained 64-48-4 networks from E1.
+Each network names the dot's column, its row, or its diagonal class on an 8x8 grid. Three marginal readers scored at
+chance on networks like these; the per-class composed reader scored 100% over 30 networks. Guess before you reveal.</p>
+<div class="card">
+  <label for="netSel">Network</label>
+  <select id="netSel"><option value="col">Network A</option><option value="row">Network B</option><option value="diag">Network C</option></select>
+  <div class="maps" id="maps"></div>
+  <label for="guess">Your guess</label>
+  <select id="guess"><option value="col">column</option><option value="row">row</option><option value="diag">diagonal</option></select>
+  <button id="reveal" type="button">Reveal</button>
+  <div class="out" id="readOut">Each tile is one class's |E| map (darker green = stronger).</div>
+</div>
+
+<h2>2. Fix: sixteen weights, one dose-response</h2>
+<p>E3 repaired a MountainCar policy stuck at 0% by editing 16 of 747 weights. A random edit of the same size scored 0%
+at every gain. Drag the override gain; 1.0 is the shipped edit.</p>
+<div class="card">
+  <label for="gain">Override gain: <span id="gainVal">1.0</span>x</label>
+  <input type="range" id="gain" min="0" max="4" step="1" value="3">
+  <div class="kpis"><div class="kpi"><div class="kv" id="succ">-</div><div class="kl">success at this gain (256 episodes)</div><div class="kt">Simulated</div></div>
+  <div class="kpi"><div class="kv">0%</div><div class="kl">before the edit, and for the random-edit control at every gain</div><div class="kt">Simulated</div></div></div>
+</div>
+
+<h2>3. Verify: the released Qwen3.5-0.8B edit</h2>
+<div class="kpis" id="e0kpis"></div>
+<p class="note" id="e0note"></p>
+
+<h2>4. What the authors' own files show</h2>
+<p>THOX re-analysed the authors' released per-problem MATH-500 records (A0, 4 samples per problem, thinking on).</p>
+<div class="kpis" id="a0kpis"></div>
+<p class="note">A gain on hundreds of problems and a loss on none is what removing one uniform obstacle looks like. A
+decoding change that avoids the same obstacle would leave the same signature, which is why section 6 matters.</p>
+
+<h2>5. Ship: size an exact signed patch</h2>
+<p>An exact rank-1 patch ships, per tensor, the direction u (float32), the edited column indices and alpha, plus a
+sparse residual for entries the factor alone misses by one rounding step: |P| = &Sigma; (4d + 2|C| + 8) + 6r.
+Defaults are the measured Experiment 8 values (two tensors; totals for changed and residual entries).</p>
+<div class="card">
+  <div class="grid">
+    <div><label for="pRows">Rows d (u length)</label><input id="pRows" type="number" min="1" value="1024"></div>
+    <div><label for="pCols">Tensor columns</label><input id="pCols" type="number" min="1" value="3584"></div>
+    <div><label for="pEdit">Edited columns |C|</label><input id="pEdit" type="number" min="1" value="64"></div>
+    <div><label for="pTen">Tensors</label><input id="pTen" type="number" min="1" value="2"></div>
+    <div><label for="pChg">Changed entries (total)</label><input id="pChg" type="number" min="0" value="130188"></div>
+    <div><label for="pRes">Residual entries r (total)</label><input id="pRes" type="number" min="0" value="12028"></div>
+  </div>
+  <table id="patchTable"><thead><tr><th>Representation</th><th>Bytes</th><th>Exact</th></tr></thead><tbody></tbody></table>
+  <p class="note">The loader verifies an Ed25519 signature, the base tensors' SHA-256, applies to the inactive A/B slot,
+  checks every result hash and only then switches. A factor without its residual fails that check by design.</p>
+</div>
+
+<h2>6. The control: loop detector and decision rule</h2>
+<p id="l1status"></p>
+<div class="card">
+  <label for="loopText">Paste a model answer (or generate an example)</label>
+  <textarea id="loopText" spellcheck="false"></textarea>
+  <button id="loopRun" type="button">Scan for a loop</button>
+  <button id="loopEx" class="secondary" type="button">Example: answer that falls into a loop</button>
+  <div class="out" id="loopOut">The test: some run of 300 consecutive word 8-grams in which at least 270 already
+appeared earlier. It is causal, so the onset is where a streaming interrupt would rewind to.</div>
+</div>
+<div class="card">
+  <p style="margin:0 0 6px"><b>Pre-registered decision rule</b> (Section 5.2): paired MATH-500 difference, released
+  edit with thinking on minus the unedited base with thinking off, and its 95% interval, in points.</p>
+  <div class="grid">
+    <div><label for="dLo">Interval low</label><input id="dLo" type="number" step="0.1" value="-1.5"></div>
+    <div><label for="dHi">Interval high</label><input id="dHi" type="number" step="0.1" value="1.2"></div>
+  </div>
+  <button id="ruleRun" type="button">Apply the rule</button>
+  <div class="out" id="ruleOut">Enter an interval and apply the rule.</div>
+</div>
+
+<footer>THOX.ai Research, companion to technical report v1.1.0 (public edition, 2026-11-04). Data embedded from
+exp/results/ at build time; this page makes no network calls. Your AI. Your Data. Your Rules.&trade;</footer>
+</div>
+<script>
+"use strict";
+const D = {"maps":{"col":{"maps":[[[6.525,8.502,-2.594,-0.798,-2.9,-2.012,-2.979,-2.389],[9.665,7.761,-2.701,-3.143,-1.579,-2.642,-2.194,-2.211],[7.211,8.288,-3.473,-2.99,-2.206,-2.943,-1.529,-1.162],[7.274,7.9,-4.083,-3.499,-2.253,-3.448,-1.983,-1.274],[7.346,8.501,-1.968,-2.826,-4.59,-1.722,-1.657,-2.07],[7.419,7.24,-3.983,-1.769,-4.745,-3.567,-2.802,-0.819],[6.904,6.839,-1.892,-2.055,-4.401,-3.309,-1.976,-1.92],[6.056,7.317,-5.19,-2.609,-3.268,-2.67,-0.938,-1.664]],[[-4.043,-3.963,7.448,8.259,-1.466,-2.453,-2.101,-1.642],[-2.802,-4.443,7.167,9.858,-2.241,-3.424,-2.672,-2.333],[-2.012,-2.68,8.659,8.678,-2.452,-1.737,-3.139,-2.32],[-2.871,-2.311,8.079,8.726,-1.994,-2.095,-0.817,-3.307],[-0.161,-3.422,9.237,8.391,-1.222,-2.818,-2.539,-2.188],[-2.016,-2.711,7.188,6.322,-2.195,-1.912,-2.822,-1.768],[-3.472,-1.487,7.953,6.923,-1.503,-2.433,-2.616,-1.298],[-0.857,-3.143,9.535,9.109,-1.986,-2.652,-3.738,-3.161]],[[-1.821,-3.721,-2.098,-4.423,8.611,8.088,-2.373,-2.1],[-3.417,-0.915,-1.563,-1.714,7.838,8.485,-3.057,-2.273],[-2.307,-3.028,-2.144,-2.965,8.373,7.457,-3.47,-3.624],[-3.008,-2.282,-1.152,-3.109,7.913,9.738,-3.797,-3.005],[-2.008,-4.062,-2.682,-0.761,7.843,8.683,-1.348,-2.703],[-1.494,-1.712,-1.571,-1.818,8.591,7.855,-2.49,-3.515],[-2.213,-2.576,0.434,-2.169,7.942,8.689,-2.889,-4.626],[-4.118,-1.797,-1.818,-3.841,8.227,8.698,-1.496,-3.788]],[[-2.32,-1.794,-1.529,-2.229,-3.581,-2.942,8.0,7.76],[-2.697,-2.469,-1.248,-3.182,-2.518,-1.857,9.806,8.111],[-3.128,-2.491,-3.225,-2.705,-2.445,-3.652,8.698,7.746],[-0.478,-2.118,-1.732,-1.368,-3.195,-3.052,9.062,9.002],[-1.23,-2.123,-2.324,-3.74,-3.248,-3.756,6.279,8.366],[-2.951,-2.388,-0.954,-1.586,-2.462,-3.879,8.696,6.37],[-2.827,-1.118,-4.308,-2.182,-1.595,-0.963,8.549,9.004],[-1.839,-2.553,-2.302,-2.555,-3.249,-2.115,9.057,10.663]]]},"row":{"maps":[[[9.109,8.471,8.6,9.504,8.356,8.972,9.78,9.081],[7.43,8.275,8.892,9.058,8.134,8.417,9.554,8.136],[-3.002,-2.013,-2.122,-2.584,-1.363,-1.944,-1.143,-2.114],[-2.048,-1.691,-2.24,-3.151,-2.748,-3.181,-2.911,-1.249],[-2.764,-1.79,-1.82,-3.797,-1.844,-2.006,-2.302,-2.603],[-1.269,-0.417,-3.214,-3.434,-2.742,-2.335,-1.689,-1.433],[-3.53,-2.256,-0.019,-2.16,-2.015,-2.816,-3.969,-1.896],[-1.62,-1.423,-0.506,-0.04,-1.613,-0.717,-1.745,-2.486]],[[-2.494,-0.448,-1.692,-1.11,-2.09,-2.594,-2.507,-1.414],[-1.378,-0.759,-2.39,-2.283,-0.89,-2.547,-2.052,-2.504],[7.575,8.777,7.873,8.152,6.739,7.899,8.488,6.757],[7.938,8.062,7.217,10.161,8.335,7.964,7.545,7.735],[-1.846,-1.305,-1.784,-1.883,-3.262,-1.479,-3.479,-1.102],[-1.228,-4.106,-2.211,-0.906,-1.111,-1.53,-2.562,-2.534],[-2.318,-2.409,-2.928,-3.702,-4.413,-2.909,-3.288,-3.316],[-3.691,-5.115,-5.397,-3.938,-3.202,-3.72,-2.94,-2.168]],[[-1.333,-3.522,-4.707,-2.786,-1.558,-2.208,-1.858,-1.338],[-3.215,-2.205,-2.337,-1.665,-2.088,-1.316,-3.205,-2.717],[-1.383,-2.94,-2.17,-3.316,-2.395,-1.325,-3.335,-0.681],[-2.085,-2.275,-2.221,-2.854,-0.534,-1.25,-1.915,-1.791],[7.449,7.8,7.798,7.925,8.28,8.318,8.419,8.05],[6.935,7.811,7.991,7.85,7.719,7.895,8.422,8.469],[-2.148,-3.04,-3.525,-1.789,-1.618,-2.116,-1.298,-3.301],[-3.124,-1.917,-0.941,-3.229,-2.852,-2.302,-3.392,-2.903]],[[-3.197,-3.342,-0.741,-2.676,-1.527,-1.401,-2.169,-2.804],[-1.158,-2.218,-2.812,-2.791,-2.137,-2.591,-1.769,-1.134],[-2.861,-3.131,-3.42,-2.87,-3.031,-2.425,-3.483,-2.887],[-3.75,-3.169,-2.39,-4.29,-5.146,-3.3,-3.451,-1.816],[-2.562,-4.105,-2.854,-2.706,-3.415,-3.303,-2.122,-3.687],[-3.164,-2.883,-2.338,-3.193,-3.414,-3.288,-4.082,-4.394],[7.223,8.571,7.985,8.145,7.651,8.425,7.53,8.113],[7.804,7.566,8.475,7.729,7.829,8.158,7.098,7.117]]]},"diag":{"maps":[[[7.783,8.54,9.497,8.122,-1.987,-0.964,-3.001,-3.076],[9.941,8.918,7.854,-2.786,-5.337,-2.711,-1.967,-1.575],[7.448,9.123,-1.774,-0.455,-5.381,-0.178,-1.519,-2.119],[9.481,-1.805,-3.024,-1.499,-2.77,-2.566,-1.367,-1.189],[-4.064,-2.303,1.752,-2.036,-0.155,-2.067,-1.71,-1.072],[-0.502,-2.259,-0.525,-2.245,-1.79,-2.705,-0.825,-1.536],[-1.693,-3.231,-2.198,-1.579,-0.633,-1.478,-0.964,-0.076],[-1.664,0.413,-1.956,-0.839,-1.445,-2.419,-2.89,-0.663]],[[-2.959,-4.893,-4.048,-2.622,5.754,5.494,5.74,7.677],[-3.257,-2.066,-2.904,4.846,7.47,6.581,8.346,-2.636],[-3.607,-2.589,7.871,8.051,6.808,5.496,-4.232,-3.859],[-4.267,7.22,7.074,7.985,8.29,-3.151,-4.799,-4.173],[7.098,5.795,3.085,7.197,-4.836,-3.368,-6.53,-3.476],[4.69,6.803,5.36,-3.023,-3.241,-3.202,-3.134,-2.929],[7.319,6.624,-2.403,-4.58,-4.529,-4.019,-3.442,-4.64],[6.796,-1.678,-3.237,-3.075,-3.237,-2.231,-2.784,-3.28]],[[-3.736,-0.936,-2.76,-3.493,-2.3,-3.015,-2.798,-2.596],[-3.817,-4.027,-3.122,-1.547,-1.91,-3.392,-3.883,7.242],[-2.328,-2.533,-5.033,-4.596,-1.354,-3.595,7.037,7.115],[-1.15,-3.359,-2.266,-4.086,-3.451,5.939,7.607,6.812],[-2.569,-2.668,-4.358,-3.378,6.599,5.959,9.057,4.894],[-1.394,-4.251,-2.712,5.404,6.066,6.436,7.469,-1.694],[-4.108,-3.047,4.564,6.897,7.778,5.836,-4.246,-3.619],[-3.073,6.063,5.461,6.66,6.083,-3.838,-2.732,-5.02]],[[0.941,-0.526,-1.018,0.283,-2.122,-0.14,0.121,-1.599],[-1.048,-1.146,-0.051,-0.575,-0.488,-1.03,-1.369,-2.289],[0.104,-2.114,-0.026,-1.465,0.003,-0.787,-2.04,-1.313],[-1.765,-1.824,-1.592,-1.117,-1.353,-2.043,-1.258,-1.818],[-0.212,-0.466,-1.959,-1.44,-1.792,-1.767,-1.065,0.649],[-1.09,-0.687,-1.164,0.069,-1.508,-0.629,-3.161,7.956],[-0.654,-0.524,-0.946,-1.875,-2.934,-1.482,9.027,8.946],[-0.718,-4.11,-1.002,-4.746,-2.309,8.929,8.746,9.39]]]}},"sweep":{"0.0":0.0,"0.25":0.21875,"0.5":0.78125,"1.0":0.94140625,"2.0":1.0},"e3_success_512":92.8,"e0r":{"changed":130188,"per":[65260,64928],"sigma":[1771,1552],"hash":["82e2d733ea64","8ef3c61bc36a"],"resid":[5872,6156],"npz":387619,"pass":true},"a0":{"source":"RikiyaT/lm_understand-logs@4d09ba6 exp8_math/eval/{unedited,p50c} math500 per-problem files","samples_per_problem":4,"base_acc":0.079,"edit_acc":0.481,"base_se":0.009654243047367062,"edit_se":0.018973613150688618,"diff":0.402,"diff_ci95":[0.3684875,0.4355],"problems_better":306,"problems_worse":0,"problems_equal":194,"base_never_solved":423,"base_never_edit_some":243,"edit_all_samples_correct":153,"base_all_samples_correct":12,"edit_majority":274,"base_majority":42},"vectors":[{"head_seed":11,"head_n":2000,"block_seed":0,"block_n":0,"reps":0,"looping":false,"onset_word":null,"n_words":2000,"repeat_share":0.0},{"head_seed":12,"head_n":500,"block_seed":13,"block_n":37,"reps":40,"looping":true,"onset_word":507,"n_words":1980,"repeat_share":0.727826},{"head_seed":14,"head_n":400,"block_seed":15,"block_n":25,"reps":30,"looping":true,"onset_word":395,"n_words":1150,"repeat_share":0.628171},{"head_seed":16,"head_n":3,"block_seed":0,"block_n":0,"reps":0,"looping":false,"onset_word":null,"n_words":3,"repeat_share":0.0},{"head_seed":17,"head_n":900,"block_seed":18,"block_n":120,"reps":4,"looping":true,"onset_word":990,"n_words":1380,"repeat_share":0.257101},{"head_seed":19,"head_n":50,"block_seed":20,"block_n":9,"reps":60,"looping":true,"onset_word":29,"n_words":590,"repeat_share":0.898799}],"l1":null};
+
+/* ---------- theme ---------- */
+(function () {
+  const btn = document.getElementById("themeBtn"), root = document.documentElement;
+  const cur = () => root.getAttribute("data-theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  const label = () => { btn.textContent = cur() === "dark" ? "Light" : "Dark"; };
+  try { const s = localStorage.getItem("thox-wsp-demo-theme"); if (s) root.setAttribute("data-theme", s); } catch (e) {}
+  label();
+  btn.addEventListener("click", () => {
+    const n = cur() === "dark" ? "light" : "dark";
+    root.setAttribute("data-theme", n);
+    try { localStorage.setItem("thox-wsp-demo-theme", n); } catch (e) {}
+    label(); drawMaps();
+  });
+})();
+
+/* ---------- loop metric: port of exp/lib/wsp_loop.py loop_scan ---------- */
+function loopScan(text, n = 8, windowLen = 300, frac = 0.9) {
+  if (typeof text !== "string") throw new TypeError("text must be a string");
+  const words = [], offsets = [];
+  const re = /\S+/g; let m;
+  while ((m = re.exec(text)) !== null) { words.push(m[0]); offsets.push(m.index); }
+  const M = words.length - n + 1;
+  const out = { looping: false, onset_word: null, onset_char: null, fire_word: null, n_words: words.length, repeat_share: 0 };
+  if (M <= 0) return out;
+  const seen = new Set(); const flags = new Uint8Array(M); let total = 0;
+  for (let i = 0; i < M; i++) {
+    const g = words.slice(i, i + n).join("\u0001");
+    if (seen.has(g)) { flags[i] = 1; total++; } else { seen.add(g); }
+  }
+  out.repeat_share = total / M;
+  if (M < windowLen) return out;
+  const need = Math.ceil(frac * windowLen - 1e-9);
+  let s = 0; for (let i = 0; i < windowLen; i++) s += flags[i];
+  let start = null;
+  if (s >= need) start = 0;
+  else for (let i = windowLen; i < M; i++) { s += flags[i] - flags[i - windowLen]; if (s >= need) { start = i - windowLen + 1; break; } }
+  if (start !== null) { out.looping = true; out.onset_word = start; out.onset_char = offsets[start]; out.fire_word = start + windowLen - 1; }
+  return out;
+}
+function minstd(seed, n) {
+  let x = seed; const out = [];
+  for (let i = 0; i < n; i++) { x = (x * 48271) % 2147483647; out.push("w" + x.toString(36)); }
+  return out;
+}
+function vectorText(v) {
+  let w = minstd(v.head_seed, v.head_n);
+  const block = minstd(v.block_seed, v.block_n);
+  for (let r = 0; r < v.reps; r++) w = w.concat(block);
+  return w.join(" ");
+}
+function selfTest() {
+  let pass = 0; const fails = [];
+  for (const v of D.vectors) {
+    const r = loopScan(vectorText(v));
+    const ok = r.looping === v.looping && r.onset_word === v.onset_word && r.n_words === v.n_words &&
+               Math.abs(r.repeat_share - v.repeat_share) < 1e-6;
+    if (ok) pass++; else fails.push(v);
+  }
+  const el = document.getElementById("selftest");
+  el.textContent = `self-test ${pass}/${D.vectors.length} match Python`;
+  if (pass !== D.vectors.length) { el.classList.add("bad"); console.error("loop self-test failed", fails); }
+  window.__thoxSelfTest = { pass, total: D.vectors.length };
+}
+
+/* ---------- 1. maps ---------- */
+function drawMaps() {
+  const task = document.getElementById("netSel").value;
+  const wrap = document.getElementById("maps"); wrap.innerHTML = "";
+  const dark = getComputedStyle(document.documentElement).getPropertyValue("--bg").trim().toUpperCase() !== "#FFFFFF";
+  D.maps[task].maps.forEach((grid, c) => {
+    const holder = document.createElement("div");
+    const cv = document.createElement("canvas"); cv.width = 8; cv.height = 8; cv.className = "map";
+    cv.setAttribute("aria-label", "class " + c + " effective map");
+    const ctx = cv.getContext("2d");
+    let mx = 0; grid.flat().forEach(v => { mx = Math.max(mx, Math.abs(v)); });
+    for (let r = 0; r < 8; r++) for (let col = 0; col < 8; col++) {
+      const t = Math.abs(grid[r][col]) / (mx || 1);
+      ctx.fillStyle = dark ? `rgba(5,164,81,${0.08 + 0.92 * t})` : `rgba(4,124,61,${0.06 + 0.94 * t})`;
+      ctx.fillRect(col, r, 1, 1);
+    }
+    const lab = document.createElement("div"); lab.className = "note"; lab.textContent = "class " + c;
+    holder.appendChild(cv); holder.appendChild(lab); wrap.appendChild(holder);
+  });
+}
+document.getElementById("netSel").addEventListener("change", () => {
+  drawMaps(); document.getElementById("readOut").textContent = "Maps drawn. Make your guess, then reveal.";
+});
+document.getElementById("reveal").addEventListener("click", () => {
+  const task = document.getElementById("netSel").value, g = document.getElementById("guess").value;
+  const names = { col: "column", row: "row", diag: "diagonal" };
+  const o = document.getElementById("readOut");
+  o.innerHTML = "";
+  const s = document.createElement("span"); s.className = g === task ? "ok" : "bad";
+  s.textContent = g === task ? "Correct. " : "Not this time. ";
+  o.appendChild(s);
+  o.appendChild(document.createTextNode(`This network's task was ${names[task]}. The per-class composed reader (R4) also ` +
+    `reads it as ${names[task]}; the three marginal readers answer "diagonal" on every column and row network. ` +
+    `Over 30 networks: R4 100%, R1-R3 at chance (33.3%). Measured, E1 (v1.0.0).`));
+});
+
+/* ---------- 2. sweep ---------- */
+const gains = Object.keys(D.sweep).map(Number).sort((a, b) => a - b);
+function showGain() {
+  const g = gains[Number(document.getElementById("gain").value)];
+  document.getElementById("gainVal").textContent = g.toFixed(2);
+  document.getElementById("succ").textContent = (D.sweep[String(g)] !== undefined ? D.sweep[String(g)] : D.sweep[g.toFixed(1)]) * 100 + "%";
+}
+document.getElementById("gain").max = gains.length - 1;
+document.getElementById("gain").value = gains.indexOf(1);
+document.getElementById("gain").addEventListener("input", showGain);
+
+/* ---------- 3. E0-R ---------- */
+(function () {
+  const e = D.e0r, f = (n) => n.toLocaleString("en-US");
+  const k = [[f(e.changed), "entries changed across the two edited down_proj tensors (" + f(e.per[0]) + " + " + f(e.per[1]) + "); rebuild from the authors' sparse diff is bit-identical", "Measured, E0-R"],
+             [f(e.sigma[0]) + " / " + f(e.sigma[1]), "sigma1/sigma2 of each tensor's diff: both edits are rank-1", "Measured, E0-R"],
+             [e.hash[0] + "... / " + e.hash[1] + "...", "edited tensor SHA-256 prefixes, matching the authors' manifest", "Measured, E0-R"],
+             [f(e.resid[0] + e.resid[1]), "entries a factor estimated from the released diff misses by one rounding step; an exact patch carries them as a residual", "Measured, P1"]];
+  document.getElementById("e0kpis").innerHTML = k.map(([v, l, t]) =>
+    `<div class="kpi"><div class="kv">${v}</div><div class="kl">${l}</div><div class="kt">${t}</div></div>`).join("");
+  document.getElementById("e0note").textContent = (e.pass ? "All E0-R checks pass. " : "E0-R did not pass. ") +
+    "Base pinned at Qwen/Qwen3.5-0.8B revision 2fc06364715b; edited checkpoint at revision d1671a178705. Full hashes: exp/results/e0r_patch_forms.json.";
+})();
+
+/* ---------- 4. A0 ---------- */
+(function () {
+  const a = D.a0, p = (x) => (x * 100).toFixed(1) + "%";
+  const k = [[p(a.base_acc) + " to " + p(a.edit_acc), "MATH-500 recomputed from the released per-problem files", "Calculated, A0"],
+             [a.problems_better + " / " + a.problems_worse, "problems where the edit scores higher / lower than the base", "Calculated, A0"],
+             [String(a.base_never_edit_some), "of the " + a.base_never_solved + " problems the base never solves in 4 samples, solved by the edit at least once", "Calculated, A0"],
+             ["+" + (a.diff * 100).toFixed(1) + " pts", "paired gain, 95% bootstrap " + (a.diff_ci95[0] * 100).toFixed(1) + " to " + (a.diff_ci95[1] * 100).toFixed(1), "Calculated, A0"]];
+  document.getElementById("a0kpis").innerHTML = k.map(([v, l, t]) =>
+    `<div class="kpi"><div class="kv">${v}</div><div class="kl">${l}</div><div class="kt">${t}</div></div>`).join("");
+})();
+
+/* ---------- 5. patch calculator ---------- */
+function fmtBytes(n) { return n >= 1e6 ? (n / 1e6).toFixed(2) + " MB" : n >= 1e3 ? (n / 1e3).toFixed(1) + " KB" : n + " B"; }
+function patchCalc() {
+  const val = (id, min) => { const v = Math.floor(Number(document.getElementById(id).value)); return Number.isFinite(v) && v >= min ? v : null; };
+  const d = val("pRows", 1), n = val("pCols", 1), c = val("pEdit", 1), r = val("pRes", 0), t = val("pTen", 1),
+        chg = val("pChg", 0);
+  const body = document.querySelector("#patchTable tbody");
+  if ([d, n, c, r, t, chg].some(x => x === null) || c > n || chg > t * d * c || r > chg) {
+    body.innerHTML = `<tr><td colspan="3" class="bad">Enter whole numbers: rows, columns, edited columns and tensors at least 1; changed entries no more than tensors x rows x edited columns; residual no more than changed entries.</td></tr>`;
+    return;
+  }
+  const rows = [["Full edited tensors (bf16)", t * d * n * 2, "yes"],
+                ["Sparse diff, raw (index + value per changed entry)", chg * 6, "yes"],
+                ["Factor + residual (Equation 3)", t * (4 * d + 2 * c + 8) + 6 * r, "yes"],
+                ["Factor only, float32 u", t * (4 * d + 2 * c + 8), r > 0 ? "no" : "yes"],
+                ["Factor only, as hex on the wire", t * (8 * d + 4 * c + 16), r > 0 ? "no" : "yes"]];
+  body.innerHTML = rows.map(([name, b, ex]) =>
+    `<tr><td>${name}</td><td class="num">${fmtBytes(b)}</td><td class="${ex === "yes" ? "ok" : "bad"}">${ex}</td></tr>`).join("");
+}
+["pRows", "pCols", "pEdit", "pRes", "pTen", "pChg"].forEach(id => document.getElementById(id).addEventListener("input", patchCalc));
+
+/* ---------- 6. loop detector + rule ---------- */
+function escapeHtml(s) { return s.replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch])); }
+function runLoop() {
+  const text = document.getElementById("loopText").value;
+  const out = document.getElementById("loopOut");
+  if (!text.trim()) { out.textContent = "Paste some text first."; return; }
+  const r = loopScan(text);
+  if (!r.looping) {
+    out.innerHTML = `<span class="ok">No loop.</span> ${r.n_words.toLocaleString("en-US")} words; ` +
+      `${(r.repeat_share * 100).toFixed(1)}% of 8-grams repeat an earlier one.`;
+    return;
+  }
+  const before = text.slice(Math.max(0, r.onset_char - 240), r.onset_char);
+  const after = text.slice(r.onset_char, r.onset_char + 360);
+  out.innerHTML = `<span class="warn">Loop detected.</span> Onset at word ${r.onset_word.toLocaleString("en-US")} of ` +
+    `${r.n_words.toLocaleString("en-US")}; a streaming detector fires at word ${(r.fire_word + 7).toLocaleString("en-US")} and rewinds to the onset. ` +
+    `${(r.repeat_share * 100).toFixed(1)}% of 8-grams repeat.\n\n...${escapeHtml(before)}<mark>${escapeHtml(after)}</mark>...`;
+}
+document.getElementById("loopRun").addEventListener("click", runLoop);
+document.getElementById("loopEx").addEventListener("click", () => {
+  const steps = [];
+  for (let i = 1; i <= 60; i++) steps.push(`Step ${i}: try n = ${i + 2}; then n^2 - 1 = ${(i + 2) * (i + 2) - 1}, which factors as (${i + 1})(${i + 3}).`);
+  const loop = "Wait, let me double-check the factorisation of n^2 - 1 again. We have n^2 - 1 = (n - 1)(n + 1), so for n = 5 this gives 4 times 6 = 24. ";
+  document.getElementById("loopText").value = "We need the smallest n with n^2 - 1 divisible by 24. " + steps.join(" ") + " " + loop.repeat(40);
+  runLoop();
+});
+function applyRule() {
+  const lo = Number(document.getElementById("dLo").value), hi = Number(document.getElementById("dHi").value);
+  const out = document.getElementById("ruleOut");
+  if (!Number.isFinite(lo) || !Number.isFinite(hi) || lo > hi) { out.innerHTML = '<span class="bad">Enter a low bound no greater than the high bound.</span>'; return; }
+  let v;
+  if (lo > 2) v = '<span class="ok">Edit adds value.</span> A loop patch has a real gap to aim at; the Section 8 bar stands.';
+  else if (hi < -2) v = '<span class="ok">Decoding dominates.</span> Turning thinking off beats the edit; a loop patch has nothing to add for a model served thinking-off.';
+  else if (lo >= -2 && hi <= 2) v = '<span class="ok">Equivalent.</span> The gain is available with no weight change; no loop patch is justified by this benchmark.';
+  else v = '<span class="warn">Inconclusive.</span> Run more samples per problem before deciding.';
+  out.innerHTML = `Interval [${lo.toFixed(1)}, ${hi.toFixed(1)}] points: ` + v;
+}
+document.getElementById("ruleRun").addEventListener("click", applyRule);
+document.getElementById("l1status").textContent = D.l1
+  ? "Section 5 is measured; the rule below reproduces the report's verdict from its interval."
+  : "Section 5's full measurement did not complete in this edition (compute billing stopped the run), so the report states no " +
+    "number for it. The detector and the rule below are the instruments that measurement will use.";
+
+drawMaps(); showGain(); patchCalc(); selfTest();
+</script>
+</body>
+</html>
