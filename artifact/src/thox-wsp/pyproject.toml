@@ -1,0 +1,10 @@
+[project]
+name = "thox-wsp"
+version = "0.1.0"
+description = "THOX Weight-Space Programming toolkit: diagnose, patch, sign, verify small weight edits"
+license = { text = "Apache-2.0" }
+requires-python = ">=3.10"
+dependencies = ["numpy", "cryptography"]
+
+[project.optional-dependencies]
+hf = ["huggingface-hub", "safetensors", "torch"]

@@ -1,0 +1,34 @@
+{
+ "base_rev": "2fc06364715b967f1860aea9cf38778875588b17",
+ "tensors": {
+  "model.language_model.layers.15.mlp.down_proj.weight": {
+   "shape": [
+    1024,
+    3584
+   ],
+   "dtype": "torch.bfloat16",
+   "edited_sha256": "82e2d733ea64feaeb4af93a1e065641d3df98b494a8b7576ef2f52e90fe2ee53",
+   "base_sha256": "ef60d2c687bab19464dca9c8bfd7777e46ad226df0c9e25643b0bab04b5a1cca",
+   "entries_changed_bitwise": 65260,
+   "entries_total": 3670016,
+   "sv_ratio_s1_over_s2": 1771.178955078125,
+   "energy_rank1_pct": 99.99945068359375,
+   "rel_change_frobenius_pct": 10.635984420776367
+  },
+  "model.language_model.layers.19.mlp.down_proj.weight": {
+   "shape": [
+    1024,
+    3584
+   ],
+   "dtype": "torch.bfloat16",
+   "edited_sha256": "8ef3c61bc36af113ad58e89dbb0a4a14dcba5a45cb750c15ab515c82ddd12eb2",
+   "base_sha256": "638eedeb701b94aa861f4438e615c07ec6c60ee703db1bfee2de577bb6498c3e",
+   "entries_changed_bitwise": 64928,
+   "entries_total": 3670016,
+   "sv_ratio_s1_over_s2": 1552.0062255859375,
+   "energy_rank1_pct": 99.9991455078125,
+   "rel_change_frobenius_pct": 8.106115341186523
+  }
+ },
+ "total_entries_changed": 130188
+}

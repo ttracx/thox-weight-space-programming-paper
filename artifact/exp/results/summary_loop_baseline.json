@@ -1,0 +1,30 @@
+{
+ "scope": "4 hand-written multi-step problems, GPU (KnightHub RTX 4060 Ti), temp 0.6/top-p 0.95/top-k 20, max_new 320; no presence penalty (transformers CPU generate); scoped instrument check, not a benchmark; micro measured separately in summary_loop_micro.json",
+ "runs": [
+  {
+   "n": 4,
+   "cap_hit_rate": 1.0,
+   "loop_rate": 0.0,
+   "model": "qwen35-0.8b-base-thinking",
+   "accuracy": 0.0,
+   "mean_tokens": 320.0
+  },
+  {
+   "n": 4,
+   "cap_hit_rate": 1.0,
+   "loop_rate": 0.0,
+   "model": "qwen35-0.8b-base-nothink",
+   "accuracy": 0.0,
+   "mean_tokens": 320.0
+  },
+  {
+   "n": 4,
+   "cap_hit_rate": 1.0,
+   "loop_rate": 0.0,
+   "model": "qwen35-0.8b-edited-thinking",
+   "accuracy": 0.0,
+   "mean_tokens": 320.0
+  }
+ ],
+ "wall_seconds": 399.4
+}

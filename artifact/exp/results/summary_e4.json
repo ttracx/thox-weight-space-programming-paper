@@ -1,0 +1,36 @@
+{
+ "model_params": 70656,
+ "layer1_prev_token_scores_weights_only": [
+  -0.343,
+  -0.122,
+  0.479,
+  0.052
+ ],
+ "layer1_prev_token_head_weights_only": 2,
+ "layer2_induction_scores_weights_only": [
+  0.052,
+  0.394,
+  0.589,
+  0.056
+ ],
+ "layer2_top_head_weights_only": 2,
+ "layer2_induction_attention_measured": [
+  0.0479,
+  0.0504,
+  0.0495,
+  0.0494
+ ],
+ "layer2_top_head_measured": 1,
+ "top_head_match": false,
+ "spearman_weights_only_vs_measured": 0.7999999999999999,
+ "repeat_position_loss": 3.185668706893921,
+ "other_position_loss": 3.1845672130584717,
+ "ablation_repeat_loss_base": 3.2017388939857483,
+ "ablation_repeat_loss_delta_by_head": {
+  "head_0": 0.007,
+  "head_1": 0.0221,
+  "head_2": 0.0177,
+  "head_3": 0.009
+ },
+ "wall_seconds": 574.3
+}

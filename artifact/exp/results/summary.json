@@ -1,0 +1,203 @@
+{
+ "paper": "Weight-Space Programming for THOX Edge Models (THOX.ai Research v1.0.0)",
+ "evidence_generated": "2026-11-03",
+ "host": "THOX build VM (CPU)",
+ "experiments": {
+  "E1_read": {
+   "trained_task_accuracy_mean": {
+    "col": 1.0,
+    "row": 1.0,
+    "diag": 1.0
+   },
+   "n_networks": 30,
+   "chance": 0.3333333333333333,
+   "readers": {
+    "R1_global_marginal_W1": {
+     "accuracy": 0.3333333333333333,
+     "permutation_control_accuracy": 0.3333333333333333,
+     "confusion": {
+      "col->diag": 10,
+      "row->diag": 10
+     }
+    },
+    "R2_per_unit_voting_W1": {
+     "accuracy": 0.3333333333333333,
+     "permutation_control_accuracy": 0.3333333333333333,
+     "confusion": {
+      "col->diag": 10,
+      "row->diag": 10
+     }
+    },
+    "R3_effective_map": {
+     "accuracy": 0.3333333333333333,
+     "permutation_control_accuracy": 0.3333333333333333,
+     "confusion": {
+      "col->diag": 10,
+      "row->diag": 10
+     }
+    },
+    "R4_effective_per_class": {
+     "accuracy": 1.0,
+     "permutation_control_accuracy": 0.3333333333333333,
+     "confusion": {}
+    }
+   },
+   "best_reader": "R4_effective_per_class",
+   "reader_accuracy": 1.0,
+   "permutation_control_accuracy": 0.3333333333333333
+  },
+  "E2_write": {
+   "triangle_wave_max_error_reachable_range": 2.220446049250313e-16,
+   "written_catch_rate": 1.0,
+   "written_target_mae": 9.357792318809289e-17,
+   "written_catch_rate_hard": 0.921,
+   "written_target_mae_hard": 9.357792318809289e-17,
+   "written_gradient_steps": 0,
+   "written_training_examples": 0,
+   "random_catch_rate_mean": 0.0407,
+   "random_catch_rate_max": 0.202,
+   "trained_oracle_catch_rate": 1.0,
+   "trained_oracle_target_mae": 0.0008688390675197861,
+   "trained_oracle_catch_rate_hard": 0.921,
+   "trained_oracle_target_mae_hard": 0.0008688390675197861,
+   "trained_gradient_steps": 1200,
+   "trained_examples": 4096,
+   "episodes": 2000,
+   "hard_regime": "paddle speed 0.16/tick, catch window 0.04"
+  },
+  "E3_fix": {
+   "policy_params": 747,
+   "base_success_rate": 0.0,
+   "edited_weights": 16,
+   "edited_fraction_pct": 2.14,
+   "fixed_success_rate": 0.927734375,
+   "random_edit_control_success_rate": 0.0,
+   "override_sensitivity": {
+    "0.0": 0.0,
+    "0.25": 0.21875,
+    "0.5": 0.78125,
+    "1.0": 0.94140625,
+    "2.0": 1.0
+   },
+   "episodes_eval": 512
+  }
+ },
+ "E0_verification": {
+  "base_rev": "2fc06364715b967f1860aea9cf38778875588b17",
+  "tensors": {
+   "model.language_model.layers.15.mlp.down_proj.weight": {
+    "shape": [
+     1024,
+     3584
+    ],
+    "dtype": "torch.bfloat16",
+    "edited_sha256": "82e2d733ea64feaeb4af93a1e065641d3df98b494a8b7576ef2f52e90fe2ee53",
+    "base_sha256": "ef60d2c687bab19464dca9c8bfd7777e46ad226df0c9e25643b0bab04b5a1cca",
+    "entries_changed_bitwise": 65260,
+    "entries_total": 3670016,
+    "sv_ratio_s1_over_s2": 1771.178955078125,
+    "energy_rank1_pct": 99.99945068359375,
+    "rel_change_frobenius_pct": 10.635984420776367
+   },
+   "model.language_model.layers.19.mlp.down_proj.weight": {
+    "shape": [
+     1024,
+     3584
+    ],
+    "dtype": "torch.bfloat16",
+    "edited_sha256": "8ef3c61bc36af113ad58e89dbb0a4a14dcba5a45cb750c15ab515c82ddd12eb2",
+    "base_sha256": "638eedeb701b94aa861f4438e615c07ec6c60ee703db1bfee2de577bb6498c3e",
+    "entries_changed_bitwise": 64928,
+    "entries_total": 3670016,
+    "sv_ratio_s1_over_s2": 1552.0062255859375,
+    "energy_rank1_pct": 99.9991455078125,
+    "rel_change_frobenius_pct": 8.106115341186523
+   }
+  },
+  "total_entries_changed": 130188
+ },
+ "E4_audit": {
+  "model_params": 70656,
+  "layer1_prev_token_scores_weights_only": [
+   -0.343,
+   -0.122,
+   0.479,
+   0.052
+  ],
+  "layer1_prev_token_head_weights_only": 2,
+  "layer2_induction_scores_weights_only": [
+   0.052,
+   0.394,
+   0.589,
+   0.056
+  ],
+  "layer2_top_head_weights_only": 2,
+  "layer2_induction_attention_measured": [
+   0.0479,
+   0.0504,
+   0.0495,
+   0.0494
+  ],
+  "layer2_top_head_measured": 1,
+  "top_head_match": false,
+  "spearman_weights_only_vs_measured": 0.7999999999999999,
+  "repeat_position_loss": 3.185668706893921,
+  "other_position_loss": 3.1845672130584717,
+  "ablation_repeat_loss_base": 3.2017388939857483,
+  "ablation_repeat_loss_delta_by_head": {
+   "head_0": 0.007,
+   "head_1": 0.0221,
+   "head_2": 0.0177,
+   "head_3": 0.009
+  },
+  "wall_seconds": 574.3
+ },
+ "loop_baseline": {
+  "status": "complete (GPU rerun, KnightHub RTX 4060 Ti, 2026-11-04)",
+  "qwen": {
+   "scope": "4 hand-written multi-step problems, GPU (KnightHub RTX 4060 Ti), temp 0.6/top-p 0.95/top-k 20, max_new 320; no presence penalty (transformers CPU generate); scoped instrument check, not a benchmark; micro measured separately in summary_loop_micro.json",
+   "runs": [
+    {
+     "n": 4,
+     "cap_hit_rate": 1.0,
+     "loop_rate": 0.0,
+     "model": "qwen35-0.8b-base-thinking",
+     "accuracy": 0.0,
+     "mean_tokens": 320.0
+    },
+    {
+     "n": 4,
+     "cap_hit_rate": 1.0,
+     "loop_rate": 0.0,
+     "model": "qwen35-0.8b-base-nothink",
+     "accuracy": 0.0,
+     "mean_tokens": 320.0
+    },
+    {
+     "n": 4,
+     "cap_hit_rate": 1.0,
+     "loop_rate": 0.0,
+     "model": "qwen35-0.8b-edited-thinking",
+     "accuracy": 0.0,
+     "mean_tokens": 320.0
+    }
+   ],
+   "wall_seconds": 399.4
+  },
+  "micro": {
+   "n": 4,
+   "cap_hit_rate": 1.0,
+   "loop_rate": 0.0,
+   "model": "thox-micro-125m",
+   "accuracy": 0.0,
+   "mean_tokens": 384.0,
+   "note": "plain completion prompt; the model ships no chat template"
+  },
+  "note": "Scoped instrument check: 4 hand-written problems, 320-token cap (384 micro), temp 0.6 profile. All configurations hit the cap on every problem; the strict loop detector never fired; accuracy 0 everywhere. At this budget the instrument distinguishes nothing; the source's loop phenomenon was measured at a 32,768-token cap. See pub/LOOP-BASELINE-SUPPLEMENT.md."
+ },
+ "patch_channel": {
+  "rust_unit_tests": "3/3 pass",
+  "e2e": "ALL PASS (verify, apply bit-identical, rollback, tamper rejected, wrong-base abort)",
+  "toolkit_version": "thox-wsp 0.1.0"
+ }
+}

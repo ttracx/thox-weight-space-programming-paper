@@ -1,0 +1,85 @@
+{
+ "generated": "2026-11-03",
+ "host": "Muse VM, NumPy CPU",
+ "experiments": {
+  "E1_read": {
+   "trained_task_accuracy_mean": {
+    "col": 1.0,
+    "row": 1.0,
+    "diag": 1.0
+   },
+   "n_networks": 30,
+   "chance": 0.3333333333333333,
+   "readers": {
+    "R1_global_marginal_W1": {
+     "accuracy": 0.3333333333333333,
+     "permutation_control_accuracy": 0.3333333333333333,
+     "confusion": {
+      "col->diag": 10,
+      "row->diag": 10
+     }
+    },
+    "R2_per_unit_voting_W1": {
+     "accuracy": 0.3333333333333333,
+     "permutation_control_accuracy": 0.3333333333333333,
+     "confusion": {
+      "col->diag": 10,
+      "row->diag": 10
+     }
+    },
+    "R3_effective_map": {
+     "accuracy": 0.3333333333333333,
+     "permutation_control_accuracy": 0.3333333333333333,
+     "confusion": {
+      "col->diag": 10,
+      "row->diag": 10
+     }
+    },
+    "R4_effective_per_class": {
+     "accuracy": 1.0,
+     "permutation_control_accuracy": 0.3333333333333333,
+     "confusion": {}
+    }
+   },
+   "best_reader": "R4_effective_per_class",
+   "reader_accuracy": 1.0,
+   "permutation_control_accuracy": 0.3333333333333333
+  },
+  "E2_write": {
+   "triangle_wave_max_error_reachable_range": 2.220446049250313e-16,
+   "written_catch_rate": 1.0,
+   "written_target_mae": 9.357792318809289e-17,
+   "written_catch_rate_hard": 0.921,
+   "written_target_mae_hard": 9.357792318809289e-17,
+   "written_gradient_steps": 0,
+   "written_training_examples": 0,
+   "random_catch_rate_mean": 0.0407,
+   "random_catch_rate_max": 0.202,
+   "trained_oracle_catch_rate": 1.0,
+   "trained_oracle_target_mae": 0.0008688390675197861,
+   "trained_oracle_catch_rate_hard": 0.921,
+   "trained_oracle_target_mae_hard": 0.0008688390675197861,
+   "trained_gradient_steps": 1200,
+   "trained_examples": 4096,
+   "episodes": 2000,
+   "hard_regime": "paddle speed 0.16/tick, catch window 0.04"
+  },
+  "E3_fix": {
+   "policy_params": 747,
+   "base_success_rate": 0.0,
+   "edited_weights": 16,
+   "edited_fraction_pct": 2.14,
+   "fixed_success_rate": 0.927734375,
+   "random_edit_control_success_rate": 0.0,
+   "override_sensitivity": {
+    "0.0": 0.0,
+    "0.25": 0.21875,
+    "0.5": 0.78125,
+    "1.0": 0.94140625,
+    "2.0": 1.0
+   },
+   "episodes_eval": 512
+  }
+ },
+ "wall_seconds": 128.2
+}
