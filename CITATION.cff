@@ -4,7 +4,7 @@ type: report
 title: "Weight-Space Programming for THOX Edge Models: Evidence Review, Small-Scale Recreation, and a Signed Patch Channel"
 version: "1.0.1"
 date-released: "2026-11-04"
-doi: "10.5281/zenodo.23954379"
+doi: "10.5281/zenodo.23955394"
 authors:
   - family-names: "Ross"
     given-names: "Craig"
@@ -16,4 +16,4 @@ authors:
 publisher:
   name: "THOX.ai"
 license: "CC-BY-4.0"
-abstract: "Evidence review, small-scale recreation, bit-exact verification and a signed patch channel for Weight-Space Programming (Takehi et al., 2026), applied to THOX edge models. Public edition; deposited at Zenodo, DOI 10.5281/zenodo.23954379."
+abstract: "Evidence review, small-scale recreation, bit-exact verification and a signed patch channel for Weight-Space Programming (Takehi et al., 2026), applied to THOX edge models. Public edition; deposited at Zenodo, DOI 10.5281/zenodo.23955394."
