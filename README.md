@@ -1,5 +1,9 @@
 # Weight-Space Programming for THOX Edge Models
 
+![License](https://img.shields.io/badge/license-See%20LICENSE-lightgrey.svg)
+![THOX.ai](https://img.shields.io/badge/THOX.ai-LLC-red.svg)
+![Repository](https://img.shields.io/badge/repository-ttracx%2Fthox--weight--space--programming--paper-0B1220)
+
 **THOX.ai Research technical report v1.1.0 (public edition, 2026-11-04)**
 Craig Ross (CEO) · Tommy Xaypanya (CTO & Co-Founder, corresponding author)
 Zenodo DOI: [10.5281/zenodo.23955394](https://doi.org/10.5281/zenodo.23955394) (v1.1.0; all-versions DOI [10.5281/zenodo.23954378](https://doi.org/10.5281/zenodo.23954378)) · License: CC BY 4.0
@@ -76,3 +80,17 @@ edition (Python toolkit, Rust loader, tests).
 Ross, C., & Xaypanya, T. (2026). *Weight-Space Programming for THOX
 Edge Models: Evidence Review, Small-Scale Recreation, and a Signed
 Patch Channel* (v1.1.0). THOX.ai Research. https://doi.org/10.5281/zenodo.23955394
+
+---
+
+## Legal
+
+Copyright (c) 2024-2026 THOX.ai LLC. All rights reserved.
+
+**THOX.ai LLC**
+- CTO: Tommy Xaypanya
+- CEO: Craig Ross
+
+See [LICENSE](LICENSE) for license terms.
+
+Unauthorized copying, modification, merger, publication, distribution, sublicensing, and/or selling of this software, via any medium, is strictly prohibited without prior written consent from THOX.ai LLC.
